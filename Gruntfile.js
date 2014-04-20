@@ -22,6 +22,7 @@ module.exports = function (grunt) {
 			all: [
 				'Gruntfile.js',
 				'angular-promises-toolkit.js',
+				'jasmine-promise-matchers.js',
 				'tests.js'
 			]
 		},
