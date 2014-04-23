@@ -89,6 +89,22 @@ describe('module urish.promisesToolkit', function () {
 				expect(notification).toBe('harduf');
 			});
 		});
+
+		describe('#property', function() {
+			it('should extract the given property from the value the promise was resolved with', function() {
+				var promise = $q.when({
+					name: 'iris',
+					type: 'flower',
+					classification: {
+						kingdom: 'Plantae',
+						order: 'Asparagales',
+						Family: 'Iridaceae'
+					}
+				});
+				expect(promise.property('name')).toBeResolvedWith('iris');
+				expect(promise.property('classification').property('family')).toBeResolvedWith('Iridaceae');
+			});
+		});
 	});
 
 	describe('extended $q service', function () {
