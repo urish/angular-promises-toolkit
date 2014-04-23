@@ -7,11 +7,12 @@
 'use strict';
 
 describe('module urish.promisesToolkit', function () {
-	var $q, ngPromisesToolkit;
+	var $rootScope, $q, ngPromisesToolkit;
 
 	beforeEach(module('urish.promisesToolkit'));
 
-	beforeEach(inject(function ($rootScope, _$q_, _ngPromisesToolkit_) {
+	beforeEach(inject(function (_$rootScope_, _$q_, _ngPromisesToolkit_) {
+		$rootScope = _$rootScope_;
 		$q = _$q_;
 		ngPromisesToolkit = _ngPromisesToolkit_;
 		jasmine.registerPromiseMatchers($rootScope);
@@ -24,7 +25,7 @@ describe('module urish.promisesToolkit', function () {
 		});
 	}
 
-	describe('ngPromises service', function () {
+	describe('ngPromisesToolkit service', function () {
 		describe('#wrapPromise', function () {
 			it('should return a promise', function () {
 				var promise = spyPromise();
@@ -54,6 +55,19 @@ describe('module urish.promisesToolkit', function () {
 	});
 
 	describe('wrapped promise methods', function () {
+		describe('#progress', function () {
+			it('should register a callback function for notifications', function () {
+				var progressValue;
+				var deferred = $q.defer();
+				deferred.promise.progress(function (value) {
+					progressValue = value;
+				});
+				deferred.notify('dvoranit');
+				$rootScope.$digest();
+				expect(progressValue).toBe('dvoranit');
+			});
+		});
+
 		describe('#forward', function () {
 			it('should resolve the target deferred if the original promise has been resolved', function () {
 				var original = $q.defer();
@@ -90,8 +104,8 @@ describe('module urish.promisesToolkit', function () {
 			});
 		});
 
-		describe('#property', function() {
-			it('should extract the given property from the value the promise was resolved with', function() {
+		describe('#property', function () {
+			it('should extract the given property from the value the promise was resolved with', function () {
 				var promise = $q.when({
 					name: 'iris',
 					type: 'flower',

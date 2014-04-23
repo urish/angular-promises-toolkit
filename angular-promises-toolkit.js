@@ -29,6 +29,10 @@
 					return wrapPromise(this.$$promise.finally.apply(this.$$promise, arguments));
 				},
 
+				progress: function (callback) {
+					return this.then(undefined, undefined, callback);
+				},
+
 				forward: function (deferred) {
 					return this.then(function (result) {
 						deferred.resolve(result);
