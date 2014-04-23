@@ -119,6 +119,27 @@ describe('module urish.promisesToolkit', function () {
 				expect(promise.property('classification').property('family')).toBeResolvedWith('Iridaceae');
 			});
 		});
+
+		describe('#assignTo', function () {
+			it('should assign the promise value to the given object property', function () {
+				var target = {
+					type: 'flower'
+				};
+				var deferred = $q.defer();
+				deferred.promise.assignTo(target, 'name');
+				deferred.resolve('sigalit');
+				$rootScope.$digest();
+				expect(target).toEqual({
+					type: 'flower',
+					name: 'sigalit'
+				});
+			});
+
+			it('should return a promise', function () {
+				expect($q.when('harzit').assignTo($rootScope, 'flower')).toBePromise();
+			});
+		});
+
 	});
 
 	describe('extended $q service', function () {
