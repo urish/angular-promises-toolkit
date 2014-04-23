@@ -21,11 +21,11 @@
 					return wrapPromise(this.$$promise.then.apply(this.$$promise, arguments));
 				},
 
-				'catch': function() {
+				'catch': function () {
 					return wrapPromise(this.$$promise.catch.apply(this.$$promise, arguments));
 				},
 
-				'finally': function() {
+				'finally': function () {
 					return wrapPromise(this.$$promise.finally.apply(this.$$promise, arguments));
 				},
 
@@ -45,7 +45,7 @@
 				timeout: function (msec) {
 					var deferred = $q.defer();
 					var timer = $window.setTimeout(function () {
-						$rootScope.$apply(function() {
+						$rootScope.$apply(function () {
 							deferred.reject('timeout expired');
 						});
 					}, msec);
@@ -56,14 +56,14 @@
 					return deferred.promise;
 				},
 
-				property: function(propertyName) {
-					return this.then(function(o) {
+				property: function (propertyName) {
+					return this.then(function (o) {
 						return o[propertyName];
 					});
 				},
 
-				toScope: function(scope, propertyName) {
-					return this.then(function(value) {
+				toScope: function (scope, propertyName) {
+					return this.then(function (value) {
 						scope[propertyName] = value;
 					});
 				}
