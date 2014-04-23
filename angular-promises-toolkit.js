@@ -82,7 +82,7 @@
 				var originalDefer = $delegate.defer;
 				$delegate.defer = function () {
 					var deferred = originalDefer.apply($delegate, arguments);
-					deferred.promise = ngPromisesToolkit.wrapPromise($delegate);
+					deferred.promise = ngPromisesToolkit.wrapPromise(deferred.promise);
 					return deferred;
 				};
 

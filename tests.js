@@ -11,9 +11,10 @@ describe('module urish.promisesToolkit', function () {
 
 	beforeEach(module('urish.promisesToolkit'));
 
-	beforeEach(inject(function ($injector) {
-		$q = $injector.get('$q');
-		ngPromisesToolkit = $injector.get('ngPromisesToolkit');
+	beforeEach(inject(function ($rootScope, _$q_, _ngPromisesToolkit_) {
+		$q = _$q_;
+		ngPromisesToolkit = _ngPromisesToolkit_;
+		jasmine.registerPromiseMatchers($rootScope);
 	}));
 
 	function spyPromise() {
@@ -31,30 +32,113 @@ describe('module urish.promisesToolkit', function () {
 			});
 		});
 
-		describe('#PromisePrototype.property', function() {
-			it('should contain a then() method', function() {
+		describe('#PromisePrototype', function () {
+			it('should contain a then() method', function () {
+				expect(ngPromisesToolkit.PromisePrototype).toEqual(jasmine.objectContaining({
+					then: jasmine.any(Function)
+				}));
+			});
 
+			it('should contain a catch() method', function () {
+				expect(ngPromisesToolkit.PromisePrototype).toEqual(jasmine.objectContaining({
+					'catch': jasmine.any(Function)
+				}));
+			});
+
+			it('should contain a finally() method', function () {
+				expect(ngPromisesToolkit.PromisePrototype).toEqual(jasmine.objectContaining({
+					'finally': jasmine.any(Function)
+				}));
+			});
+		});
+	});
+
+	describe('wrapped promise methods', function () {
+		describe('#forward', function () {
+			it('should resolve the target deferred if the original promise has been resolved', function () {
+				var original = $q.defer();
+				var targetDeferred = $q.defer();
+				original.promise.forward(targetDeferred);
+				expect(targetDeferred.promise).not.toBeFulfilled();
+				original.resolve('narkis');
+				expect(targetDeferred.promise).toBeResolvedWith('narkis');
+			});
+
+			it('should reject the target deferred if the original promise has been rejected', function () {
+				var original = $q.defer();
+				var targetDeferred = $q.defer();
+				original.promise.forward(targetDeferred);
+				expect(targetDeferred.promise).not.toBeFulfilled();
+				original.reject('savion');
+				expect(targetDeferred.promise).toBeRejectedWith('savion');
+			});
+
+			it('should call notify on the target deferred when the original promise is notified', function () {
+				var original = $q.defer();
+				var targetDeferred = $q.defer();
+				var notification = null;
+				targetDeferred.promise.then(null, null, function (value) {
+					notification = value;
+				});
+
+				original.promise.forward(targetDeferred);
+				expect(notification).toBe(null);
+
+				original.notify('harduf');
+				expect(targetDeferred.promise).not.toBeFulfilled();
+				expect(notification).toBe('harduf');
 			});
 		});
 	});
 
 	describe('extended $q service', function () {
-		it('defer() should return an object with a wrapped promise', function () {
-			expect($q.defer().promise.$$promise).toBeDefined();
+		describe('#defer', function () {
+			it('should return an object with a wrapped promise', function () {
+				expect($q.defer().promise.$$promise).toBeDefined();
+			});
+
+			it('should resolve the promise when calling resolve()', function () {
+				var deferred = $q.defer();
+				expect(deferred.promise).not.toBeFulfilled();
+				deferred.resolve('kalanit');
+				expect(deferred.promise).toBeResolvedWith('kalanit');
+			});
+
+			it('should reject promises when calling reject()', function () {
+				var deferred = $q.defer();
+				expect(deferred.promise).not.toBeFulfilled();
+				deferred.reject('rakefet');
+				expect(deferred.promise).toBeRejectedWith('rakefet');
+			});
 		});
 
-		it('reject() should return a wrapped promise', function () {
-			expect($q.reject('error').$$promise).toBeDefined();
+		describe('#reject', function () {
+			it('should return a wrapped promise', function () {
+				expect($q.reject('rakefet').$$promise).toBeDefined();
+			});
+
+			it('should return a rejected promise with the given reason', function () {
+				expect($q.reject('rakefet')).toBeRejectedWith('rakefet');
+			});
 		});
 
-		it('when() should return a wrapped promise', function () {
-			expect($q.when(true).$$promise).toBeDefined();
+
+		describe('#when', function () {
+			it('should return a wrapped promise', function () {
+				expect($q.when('kalanit').$$promise).toBeDefined();
+			});
+
+			it('should return a resolved promise with the given reason', function () {
+				expect($q.when('kalanit')).toBeResolvedWith('kalanit');
+			});
 		});
 
-		it('all() should return a wrapped promise', function () {
-			var promise1 = spyPromise();
-			var promise2 = spyPromise();
-			expect($q.all(promise1, promise2).$$promise).toBeDefined();
+		describe('#all', function () {
+			it('should return a wrapped promise', function () {
+				var promise1 = spyPromise();
+				var promise2 = spyPromise();
+				expect($q.all(promise1, promise2).$$promise).toBeDefined();
+			});
 		});
 	});
 });

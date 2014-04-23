@@ -16,6 +16,7 @@ module.exports = function (config) {
 			'bower_components/angular/angular.js',
 			'bower_components/angular-mocks/angular-mocks.js',
 			'angular-promises-toolkit.js',
+			'jasmine-promise-matchers.js',
 			'tests.js'
 		],
 		preprocessors: {
