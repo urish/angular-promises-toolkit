@@ -139,6 +139,54 @@ describe('module urish.promisesToolkit', function () {
 				expect($q.when('harzit').assignTo($rootScope, 'flower')).toBePromise();
 			});
 		});
+
+		describe('#timeout', function () {
+			beforeEach(function () {
+				jasmine.clock().install();
+			});
+
+			it('should resolve if the original promise was resolved before the timeout expired', function () {
+				var deferred = $q.defer();
+				var timeoutPromise = deferred.promise.timeout(500);
+				deferred.resolve('asfeset');
+				expect(timeoutPromise).toBeResolvedWith('asfeset');
+			});
+
+			it('should reject if the original promise was rejected before the timeout expired', function () {
+				var deferred = $q.defer();
+				var timeoutPromise = deferred.promise.timeout(500);
+				deferred.reject('hardal');
+				expect(timeoutPromise).toBeRejectedWith('hardal');
+			});
+
+			it('should reject if the timeout expired before the promise was fulfilled', function () {
+				var deferred = $q.defer();
+				var timeoutPromise = deferred.promise.timeout(500);
+				jasmine.clock().tick(1000);
+				deferred.resolve('vered');
+				expect(timeoutPromise).toBeRejectedWith(new Error('Timed out after 500 ms'));
+			});
+
+			it('should set the rejection reason to the string given in the second parameter of timeout() wrapped as an Error object', function () {
+				var deferred = $q.defer();
+				var timeoutPromise = deferred.promise.timeout(500, 'Request timed out');
+				jasmine.clock().tick(1000);
+				deferred.reject('vered');
+				expect(timeoutPromise).toBeRejectedWith(new Error('Request timed out'));
+			});
+
+			it('should set the rejection reason to the non-string value given in the second parameter of timeout()', function () {
+				var deferred = $q.defer();
+				var timeoutPromise = deferred.promise.timeout(500, {
+					reason: 'TIMEOUT'
+				});
+				jasmine.clock().tick(1000);
+				deferred.resolve('vered');
+				expect(timeoutPromise).toBeRejectedWith({
+					reason: 'TIMEOUT'
+				});
+			});
+		});
 	});
 
 	describe('extended $q service', function () {
@@ -171,7 +219,6 @@ describe('module urish.promisesToolkit', function () {
 				expect($q.reject('rakefet')).toBeRejectedWith('rakefet');
 			});
 		});
-
 
 		describe('#when', function () {
 			it('should return a wrapped promise', function () {
