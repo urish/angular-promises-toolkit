@@ -112,7 +112,7 @@ describe('module urish.promisesToolkit', function () {
 					classification: {
 						kingdom: 'Plantae',
 						order: 'Asparagales',
-						Family: 'Iridaceae'
+						family: 'Iridaceae'
 					}
 				});
 				expect(promise.property('name')).toBeResolvedWith('iris');
@@ -139,7 +139,6 @@ describe('module urish.promisesToolkit', function () {
 				expect($q.when('harzit').assignTo($rootScope, 'flower')).toBePromise();
 			});
 		});
-
 	});
 
 	describe('extended $q service', function () {

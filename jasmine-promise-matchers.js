@@ -91,22 +91,22 @@ jasmine.registerPromiseMatchers = function ($rootScope) {
 
 		toBeResolved: makePromiseMatcher({
 			resolved: true,
-			hasValue: false
+			checkValue: false
 		}),
 
 		toBeResolvedWith: makePromiseMatcher({
 			resolved: true,
-			hasValue: true
+			checkValue: true
 		}),
 
 		toBeRejected: makePromiseMatcher({
 			resolved: false,
-			hasValue: false
+			checkValue: false
 		}),
 
 		toBeRejectedWith: makePromiseMatcher({
 			resolved: false,
-			hasValue: true
+			checkValue: true
 		}),
 
 		toBeFulfilled: function () {
