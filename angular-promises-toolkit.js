@@ -46,11 +46,15 @@
 					});
 				},
 
-				timeout: function (msec) {
+				timeout: function (msec, message) {
 					var deferred = $q.defer();
+					if (angular.isUndefined(message) || angular.isString(message)) {
+						message = new Error(message || 'Timed out after ' + msec + ' ms');
+						message.code = 'ETIMEDOUT';
+					}
 					var timer = $window.setTimeout(function () {
 						$rootScope.$apply(function () {
-							deferred.reject('timeout expired');
+							deferred.reject(message);
 						});
 					}, msec);
 
