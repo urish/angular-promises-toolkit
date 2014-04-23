@@ -49,6 +49,9 @@ TODO Documentation
 #### promise.property(name)
 TODO Documentation
 
+#### promise.assignTo(object, propertyName)
+TODO documentation
+
 Many of the above methods were inspired by the [Q library](https://github.com/kriskowal/q), and
 some of the documentation is based on Q's documentation.
 

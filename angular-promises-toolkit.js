@@ -70,7 +70,7 @@
 					});
 				},
 
-				toScope: function (scope, propertyName) {
+				assignTo: function (scope, propertyName) {
 					return this.then(function (value) {
 						scope[propertyName] = value;
 					});
