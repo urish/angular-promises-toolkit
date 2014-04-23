@@ -32,7 +32,25 @@ var myapp = angular.module('myapp', ['urish.promisesToolkit']);
 
 ### New Promise Methods
 
-TODO
+Once you have included angular-promises-toolkit in your projects, all the promises will automatically
+have the following methods:
+
+#### promise.progress(onProgress)
+A sugar method, equivalent to `promise.then(undefined, undefined, onProgress)`.
+
+#### promise.timeout(ms, message)
+Returns a promise that will have the same result as `promise`, except that if promise is not fulfilled
+or rejected before `ms` milliseconds, the returned promise will be rejected with an `Error` with the given
+`message`. If `message` is not supplied, the message will be `"Timed out after " + ms + " ms"`.
+
+#### promise.forward(deferred)
+TODO Documentation
+
+#### promise.property(name)
+TODO Documentation
+
+Many of the above methods were inspired by the [Q library](https://github.com/kriskowal/q), and
+some of the documentation is based on Q's documentation.
 
 License
 ----
